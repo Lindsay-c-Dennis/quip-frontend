@@ -20,13 +20,13 @@
           <v-btn color="success" @click="promptModal = true"><v-icon>mdi-pen-plus</v-icon>Write a New Prompt</v-btn>
           <v-dialog persistent v-model="promptModal">
             <v-card>
-              <v-form lazy-validation ref="promptForm">
+              <v-form lazy-validation  v-model="valid" ref="promptForm">
                 <v-select label="Select a Game" :items="games" v-model="selectedGame"></v-select>
                 <v-switch
                   v-model="isThriplash"
                   :label="`Is this a Thriplash? ${isThriplash ? 'Yes!' : 'Nope'}`"
                 ></v-switch>
-                <v-textarea label="Prompt" :counter="120"></v-textarea>
+                <v-textarea :rules="promptRules" v-model="promptText" label="Prompt" :counter="120"></v-textarea>
                 <v-btn color="primary" @click="submit">Submit Prompt</v-btn>
               </v-form>
             </v-card>
@@ -47,8 +47,14 @@ export default {
     games: [{text: 'Latest', value: 'latest'}],
     googleUser: null,
     promptModal: null,
+    promptRules: [
+        v => !!v || 'Prompt is required',
+        v => v.length <= 120 || 'Prompt must be less than 120 characters',
+      ],
+    promptText: '',
     selectedGame: [{text: 'Latest', value: 'latest'}],
-    userName: ''
+    userName: '',
+    valid: false
   }),
   methods: {
     async login() {
@@ -56,8 +62,8 @@ export default {
       const profile = await this.googleUser.getBasicProfile()
       this.userName = profile.Ue;
     },
-    async submit() {
-      
+    submit() {
+      this.$refs.promptForm.validate();
     }
   }
 };

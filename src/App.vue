@@ -52,7 +52,7 @@ export default {
         v => v.length <= 120 || 'Prompt must be less than 120 characters',
       ],
     promptText: '',
-    selectedGame: [{text: 'Latest', value: 'latest'}],
+    selectedGame: {text: 'Latest', value: 'latest'},
     userName: '',
     valid: false
   }),
